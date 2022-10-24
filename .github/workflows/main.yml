@@ -27,7 +27,7 @@ jobs:
 
   # define job to build and publish docker image
   build-and-push-docker-image:
-    #needs: test-backend #trying it out without test-backend
+    needs: test-backend #trying it out without test-backend
     # run only when code is compiling and tests are passing
     runs-on: ubuntu-latest
 
@@ -43,6 +43,8 @@ jobs:
           context: ./simple-api
           # Note: tags has to be all lower-case
           tags:  ${{secrets.DOCKERHUBUSER}}/tp-devops-epf/simple-api
+          # build on feature branches, push only on main branch
+          push: ${{ github.ref == 'refs/heads/main }}
 
       - name: Build image and push database
         uses: docker/build-push-action@v2
@@ -51,6 +53,8 @@ jobs:
           context: ./database
           # Note: tags has to be all lower-case
           tags:  ${{secrets.DOCKERHUBUSER}}/tp-devops-epf/database
+          # build on feature branches, push only on main branch
+          push: ${{ github.ref == 'refs/heads/main }}
 
       - name: Build image and push httpd
         uses: docker/build-push-action@v2
@@ -59,3 +63,6 @@ jobs:
           context: ./httpd
           # Note: tags has to be all lower-case
           tags:  ${{secrets.DOCKERHUBUSER}}/tp-devops-epf/httpd
+          # build on feature branches, push only on main branch
+          push: ${{ github.ref == 'refs/heads/main }}
+
